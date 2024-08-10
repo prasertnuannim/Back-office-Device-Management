@@ -21,8 +21,11 @@
     "typescript": "^5.5.4"
   },
   "dependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/bcryptjs": "^2.4.6",
     "@types/lodash": "^4.17.7",
     "@types/mongoose": "^5.11.97",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
