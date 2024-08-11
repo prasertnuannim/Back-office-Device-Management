@@ -1,4 +1,5 @@
 import Login from "./layouts/Login";
+import ManageDevices from "./layouts/ManageDevices";
 import Register from "./layouts/Register";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 
@@ -9,6 +10,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/manageDevices" element={<ManageDevices />} />
         </Routes>
       </BrowserRouter>
     </div>

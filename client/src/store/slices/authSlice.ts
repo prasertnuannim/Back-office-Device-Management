@@ -8,19 +8,19 @@ interface UserState {
   token: string | null;
   status: "idle" | "loading" | "success" | "failed";
   error: string | null;
-  isAuthenticated: boolean;
-  isAuthenticating: boolean;
+  // isAuthenticated: boolean;
+  // isAuthenticating: boolean;
   count: number;
 }
 
 const initialState: UserState = {
   accessToken: "",
   user: null,
-  token: null,
+  token: localStorage.getItem('authToken'),
   status: "idle",
   error: null,
-  isAuthenticated: false,
-  isAuthenticating: true,
+  //isAuthenticated: !!localStorage.getItem('authToken'),
+  //isAuthenticating: true,
   count: 0,
 };
 
@@ -52,6 +52,7 @@ export const loginUser = createAsyncThunk(
   async (credential: LoginAction) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     const response = await httpClient.post(`http://localhost:3001/auth/login`, credential);
+    console.log("response", response.data);
       return response.data;
   }
 );
@@ -76,9 +77,10 @@ const userSlice = createSlice({
 
     logout(state) {
       state.user = null;
-      state.token = null;
       state.status = "idle";
       state.error = null;
+      state.token = null;
+      localStorage.removeItem("authToken");
     },
   },
 
@@ -95,7 +97,7 @@ const userSlice = createSlice({
          (state, action: PayloadAction<UserResponse>) => {
            state.status = "success";
            state.user = action.payload.user;
-           state.token = action.payload.token;
+         //  state.token = action.payload.token;
          })
 
        .addCase(registerUser.rejected, (state, action: PayloadAction<any>) => {
@@ -111,7 +113,7 @@ const userSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action: PayloadAction<any>) => {
         state.status = "success";
         state.user = action.payload.user;
-        state.token = action.payload.token;
+        localStorage.setItem('authToken', action.payload.token);
       })
 
       .addCase(loginUser.rejected, (state, action: PayloadAction<any>) => {
@@ -122,5 +124,5 @@ const userSlice = createSlice({
 });
 
 export default userSlice.reducer;
-export const { changeState, logout } = userSlice.actions;
+export const { changeState, logout} = userSlice.actions;
 export const authSelector = (state: RootState) => state.auth;

@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -15,8 +15,9 @@ interface IFormInput {
 
 export default function Login() {
   const dispatch = useAppDispatch();
-  const { status, error } = useSelector((state: RootState) => state.auth);
+  const navigate = useNavigate();
 
+  const { status, user} = useSelector((state: RootState) => state.auth);
   const loginSchema = Yup.object().shape({
     username: Yup.string().required("Username is required"),
     password: Yup.string()
@@ -40,6 +41,12 @@ export default function Login() {
     const { username, password } = data;
     dispatch(loginUser({ username, password }));
   };
+  
+  useEffect(() => {
+    if (status === "success") {
+      navigate("/manageDevices");
+    }
+  }, [status]);
 
   return (
     <div className="w-full h-screen flex items-center justify-center tracking-wider">
@@ -95,12 +102,12 @@ export default function Login() {
               </p>
             )}
           </div>
-          <Link
-            to="/register"
+          <div
+            onClick={() => navigate("/register")}
             className="mx-5 my-5 py-2 flex items-center justify-center cursor-pointer"
           >
             <p className="text-sm">Don't have an account? / Register</p>
-          </Link>
+          </div>
         </form>
       </div>
     </div>

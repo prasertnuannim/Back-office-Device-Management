@@ -2,20 +2,18 @@ import express from "express";
 import sqlite3 from "sqlite3";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { Router, Request, Response } from 'express';
 
 const db = new sqlite3.Database("./database.sqlite");
-
-export const login = async (req: express.Request, res: express.Response) => {
-
+export const login = async (req:Request, res: Response) => {
   try {
-    const { username, password } = req.body;
+    const { username, password }:any = req.body;
     db.all(
       "SELECT * FROM users WHERE username = ?",
       [username],
       async (err, rows: any) => {
         if (err) {
-          res.status(500).json({ error: err.message });
-          return false;
+          return res.status(500).json({ error: err.message });
         } else if (rows.length === 0) {
           console.log("Usr not found");
           res.sendStatus(404);
@@ -30,11 +28,7 @@ export const login = async (req: express.Request, res: express.Response) => {
           const token = jwt.sign({ username }, "mysecret", {
             expiresIn: "1h",
           });
-          console.log("first token", token);
-         // res.cookie("token", 'token');
-         res.cookie('SERT-AUTH', token, {domain: 'localhost', path: '/'});
-          console.log(rows);
-          res.status(200).json({ rows, token });
+        res.send({token:token, user: rows[0].userName});
         }
       }
     );
@@ -48,7 +42,7 @@ export const login = async (req: express.Request, res: express.Response) => {
 export const register = async (req: express.Request, res: express.Response) => {
   try {
     const { email, password, username } = req.body;
-    db.get(
+    db.all(
       "SELECT * FROM users WHERE userName = ?",
       [username],
       async (err, row) => {
