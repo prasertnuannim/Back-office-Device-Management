@@ -31,8 +31,8 @@ export default function Login() {
   } = useForm<IFormInput>({
     resolver: yupResolver(loginSchema),
     defaultValues: {
-      username: "",
-      password: "",
+      username: "sert",
+      password: "sert",
     },
   });
 
@@ -90,7 +90,7 @@ export default function Login() {
               Login
             </button>
             {status === "failed" && (
-              <p className="flex items-center justify-center rounded-md bg-red-500  font-medium text-white p-2 mt-2">
+              <p className="flex items-center justify-center rounded-md bg-red-700  font-medium text-white p-2 mt-2">
                 something went wrong
               </p>
             )}

@@ -3,8 +3,7 @@ import http from "http";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import comptrssion from "compression";
-import cors from "cors";
-import mongoose from "mongoose";
+import cors from "cors";;
 import router from "./router";
 
 const app = express();
@@ -16,17 +15,20 @@ app.use(cors({
 app.use(comptrssion());
 app.use(cookieParser());
 app.use(bodyParser.json());
+app.use(cors());
 
 const server = http.createServer(app);
 
+app.get('/', function (req, res) {
+    // Cookies that have not been signed
+    console.log('Cookies: ', req.cookies)
+  
+    // Cookies that have been signed
+    console.log('Signed Cookies: ', req.signedCookies)
+  })
+  
 server.listen(3001, () => {
     console.log("Server is running on http://localhost:3001/");
 })
-
-const MONGO_URL = "mongodb://localhost:27017/backOffice"
-
-mongoose.Promise = Promise;
-mongoose.connect(MONGO_URL);
-mongoose.connection.on('error', (error:Error) => console.log(error))
 
 app.use('/', router())

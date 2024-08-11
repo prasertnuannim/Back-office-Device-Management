@@ -3,9 +3,9 @@ import React, { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FaUser, FaLock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
-import { Link, Router, Routes, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
-import { registerUser } from "../store/slices/authSlice";
+import { changeState, registerUser } from "../store/slices/authSlice";
 import { RootState, useAppDispatch } from "../store/store";
 import { useSelector } from "react-redux";
 
@@ -48,7 +48,8 @@ export default function Register() {
 
   useEffect(() => {
     if (status === "success") {
-     <Link to="/login" />
+      dispatch(changeState())
+      navigate("/")
     }
   }, [status]);
 
@@ -100,16 +101,24 @@ export default function Register() {
           
           <div className="mx-5 my-7 py-2">
             <button className="bg-black w-full h-[35px] text-white">Register</button>
+
             {status === "failed" && (
-              <p className="flex items-center justify-center rounded-md bg-red-500  font-medium text-white p-2 mt-2">
+              <p className="flex items-center justify-center rounded-md bg-red-700  font-medium text-white p-2 mt-2">
                 something went wrong
               </p>
             )}
+
+             {status === "loading" && (
+              <p className="flex items-center justify-center rounded-md bg-green-700  font-medium text-white p-2 mt-2">
+                Registration Successful ...
+              </p>
+            )} 
+
           </div>
         
-          <Link to="/" className="mx-5 my-5 py-2 flex items-center justify-center cursor-pointer">
-            <p className="text-sm">Already have an account? / Login</p>
-          </Link>
+          <div className="mx-5 my-5 py-2 flex items-center justify-center cursor-pointer">
+            <p className="text-sm" onClick={() => navigate("/")}>Already have an account? / Login</p>
+          </div>
         </form>
       </div>
     </div>

@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 const db = new sqlite3.Database("./database.sqlite");
 
 export const login = async (req: express.Request, res: express.Response) => {
+
   try {
     const { username, password } = req.body;
     db.all(
@@ -16,7 +17,6 @@ export const login = async (req: express.Request, res: express.Response) => {
           res.status(500).json({ error: err.message });
           return false;
         } else if (rows.length === 0) {
-          //res.sendStatus(404).json({ message: "user not found" });
           console.log("Usr not found");
           res.sendStatus(404);
           return false
@@ -27,10 +27,12 @@ export const login = async (req: express.Request, res: express.Response) => {
             res.status(401).json({ message: "incorrect password" });
             return
           }
-
           const token = jwt.sign({ username }, "mysecret", {
             expiresIn: "1h",
           });
+          console.log("first token", token);
+         // res.cookie("token", 'token');
+         res.cookie('SERT-AUTH', token, {domain: 'localhost', path: '/'});
           console.log(rows);
           res.status(200).json({ rows, token });
         }
