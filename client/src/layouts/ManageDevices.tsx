@@ -1,57 +1,30 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import DeviceCard from '../components/DeviceCard';
 
-const ManageDevices = () => {
-  const drives = [
-    { id: 1, name: 'Drive 1', status: 'Active' },
-    { id: 2, name: 'Drive 2', status: 'Inactive' },
-  ];
+const devices = [
+  { id: 1, name: 'Device 1', status: 'Online', temperature: 25, speed: "1000 /rpm", lastUpdated: '2024-08-12' },
+  { id: 2, name: 'Device 2', status: 'Offline', temperature: 30, speed: "1000 /rpm", lastUpdated: '2024-08-11' },
+  { id: 3, name: 'Device 3', status: 'Maintenance',temperature: 35,speed: "1000 / rpm",  lastUpdated: '2024-08-10' },
+];
 
+const DeviceManagement: React.FC = () => {
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4 bg-white">Manage Drives</h1>
-      <Link to="/add" className="bg-blue-500 text-white px-4 py-2 rounded">
-        Add Drive
-      </Link>
-      <div className="mt-4">
-        <table className="table-auto w-full">
-          <thead>
-            <tr>
-              <th className="px-4 py-2">Name</th>
-              <th className="px-4 py-2">Status</th>
-              <th className="px-4 py-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {drives.map((drive) => (
-              <tr key={drive.id}>
-                <td className="border px-4 py-2">{drive.name}</td>
-                <td className="border px-4 py-2">{drive.status}</td>
-                <td className="border px-4 py-2">
-                  <Link
-                    to={`/edit/${drive.id}`}
-                    className="bg-yellow-500 text-white px-4 py-2 rounded mr-2"
-                  >
-                    Edit
-                  </Link>
-                  <button
-                    className="bg-red-500 text-white px-4 py-2 rounded"
-                    onClick={() => handleDelete(drive.id)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-4">Device Management</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {devices.map(device => (
+          <DeviceCard
+            key={device.id}
+            deviceName={device.name}
+            temperature={device.temperature}
+            speed={device.speed}
+            status={device.status}
+            lastUpdated={device.lastUpdated}
+          />
+        ))}
       </div>
     </div>
   );
 };
 
-const handleDelete = (id:any) => {
-  console.log(`Delete drive with id ${id}`);
-};
-
-export default ManageDevices;
+export default DeviceManagement;
