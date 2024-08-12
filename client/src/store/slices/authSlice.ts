@@ -123,6 +123,6 @@ const userSlice = createSlice({
   },
 });
 
-export default userSlice.reducer;
 export const { changeState, logout} = userSlice.actions;
 export const authSelector = (state: RootState) => state.auth;
+export default userSlice.reducer;
