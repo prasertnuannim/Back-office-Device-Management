@@ -17,7 +17,7 @@ export default function Login() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { status, user} = useSelector((state: RootState) => state.auth);
+  const { status } = useSelector((state: RootState) => state.auth);
   const loginSchema = Yup.object().shape({
     username: Yup.string().required("Username is required"),
     password: Yup.string()
@@ -41,7 +41,7 @@ export default function Login() {
     const { username, password } = data;
     dispatch(loginUser({ username, password }));
   };
-  
+
   useEffect(() => {
     if (status === "success") {
       navigate("/manageDevices");
@@ -49,7 +49,7 @@ export default function Login() {
   }, [status]);
 
   return (
-    <div className="w-full h-screen flex items-center justify-center tracking-wider">
+    <div className="w-full h-screen flex items-center justify-center tracking-wider bg-gradient-to-t from-sky-700 to-sky-300">
       <div className="w-11/12 sm:w-5/12 md:w-3/12 text-sm glass">
         <div className="w-full text-center my-3">
           <h2 className="text-2xl text-black font-medium">Login</h2>
@@ -69,7 +69,6 @@ export default function Login() {
           {errors.username && (
             <p className="text-white mx-5">{errors.username.message}</p>
           )}
-
 
           <div className="flex border-b-black border-b-2 mx-5 mt-5 py-1">
             <input
@@ -99,6 +98,11 @@ export default function Login() {
             {status === "failed" && (
               <p className="flex items-center justify-center rounded-md bg-red-700  font-medium text-white p-2 mt-2">
                 something went wrong
+              </p>
+            )}
+            {status === "loading" && (
+              <p className="flex items-center justify-center rounded-md bg-sky-700  font-medium text-white p-2 mt-2">
+                loading...
               </p>
             )}
           </div>

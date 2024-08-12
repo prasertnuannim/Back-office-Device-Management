@@ -18,8 +18,6 @@ export default function Register() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const {status} = useSelector((state: RootState) => state.auth)
-
-  console.log("status", status)
   const registerSchema = Yup.object().shape({
     username: Yup.string().required("Username is required"),
     password: Yup.string()
@@ -54,7 +52,7 @@ export default function Register() {
   }, [status]);
 
   return (
-    <div className="w-full h-screen flex items-center justify-center tracking-wider">
+    <div className="w-full h-screen flex items-center justify-center tracking-wider  bg-gradient-to-t from-gray-700 to-gray-300">
       <div className="w-11/12  sm:w-5/12 md:w-3/12 text-sm glass">
         <div className="w-full text-center my-3">
           <h2 className="text-2xl text-black font-medium">Register</h2>
@@ -110,7 +108,7 @@ export default function Register() {
 
              {status === "loading" && (
               <p className="flex items-center justify-center rounded-md bg-green-700  font-medium text-white p-2 mt-2">
-                Registration Successful ...
+                Loading...
               </p>
             )} 
 

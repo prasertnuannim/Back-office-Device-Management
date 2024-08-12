@@ -8,8 +8,6 @@ interface UserState {
   token: string | null;
   status: "idle" | "loading" | "success" | "failed";
   error: string | null;
-  // isAuthenticated: boolean;
-  // isAuthenticating: boolean;
   count: number;
 }
 
@@ -19,8 +17,6 @@ const initialState: UserState = {
   token: localStorage.getItem('authToken'),
   status: "idle",
   error: null,
-  //isAuthenticated: !!localStorage.getItem('authToken'),
-  //isAuthenticating: true,
   count: 0,
 };
 
@@ -52,7 +48,6 @@ export const loginUser = createAsyncThunk(
   async (credential: LoginAction) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     const response = await httpClient.post(`http://localhost:3001/auth/login`, credential);
-    console.log("response", response.data);
       return response.data;
   }
 );
@@ -97,7 +92,6 @@ const userSlice = createSlice({
          (state, action: PayloadAction<UserResponse>) => {
            state.status = "success";
            state.user = action.payload.user;
-         //  state.token = action.payload.token;
          })
 
        .addCase(registerUser.rejected, (state, action: PayloadAction<any>) => {
