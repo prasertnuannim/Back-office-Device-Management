@@ -6,14 +6,33 @@ const db = new sqlite3.Database("./database.sqlite");
 export const add = async (req: express.Request, res: express.Response) => {
   try {
     const { name, status, temperature, speed } = req.body;
-    db.run(
-      "INSERT INTO iot_devices (name, status, temperature, speed) VALUES (?, ?, ?, ?)",
-      [name, status, temperature, speed],
-      function (err) {
+    db.get(
+      "SELECT * FROM iot_devices WHERE name = ?",
+      [name],
+      function (err, row) {
         if (err) {
-          return res.status(500).json({ error: "Error inserting device" });
+          return res.status(500).json({ error: "Error adding device" });
         }
-        return res.status(200).json({ message: "Device created successfully" });
+        if (row) {
+     //     console.log("Device already exists");
+          res.send("Device already exists");
+          return false 
+        } else {
+          db.run(
+            "INSERT INTO iot_devices (name, status, temperature, speed) VALUES (?, ?, ?, ?)",
+            [name, status, temperature, speed],
+            function (err) {
+              if (err) {
+                return res
+                  .status(500)
+                  .json({ error: "Error inserting device" });
+              }
+              return res
+                .status(200)
+                .json({ message: "Device created successfully" });
+            }
+          );
+        }
       }
     );
   } catch (error) {
@@ -32,14 +51,14 @@ export const list = async (req: express.Request, res: express.Response) => {
       }
     });
   } catch (error) {
-    console.log(error);
+  //  console.log(error);
     return res.status(400).json({ error: "Error list device" });
   }
 };
 
 export const update = async (req: express.Request, res: express.Response) => {
   try {
-    const {status, temperature, speed } = req.body;
+    const { status, temperature, speed } = req.body;
     db.all(
       "UPDATE iot_devices SET status = ?, temperature = ?, speed =? WHERE id = ?",
       [status, temperature, speed, req.params.id],

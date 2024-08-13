@@ -7,7 +7,7 @@ import { IoLogOut } from "react-icons/io5";
 import AddModal from "../components/AddModal";
 import { useNavigate } from "react-router-dom";
 import { getDevices } from "../store/slices/devieSlice";
-import { changeState } from "../store/slices/authSlice";
+import { logout, removeToken } from "../store/slices/authSlice";
 
 interface Device {
   id: number;
@@ -36,16 +36,19 @@ const DeviceManagement: React.FC = () => {
   };
 
   const logOut = () => {
-    localStorage.removeItem("authToken");
-    dispatch(changeState());
-    navigate("/");
+    dispatch(removeToken());
+    setTimeout(() => {
+      navigate("/");
+    }, 1000);
   };
 
   return (
     <div className=" flex h-screen bg-gray-300">
       <div className="container mx-auto p-4">
         <div className="mb-4 flex justify-between">
-          <p className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-red-700 via-sky-700 to-green-700">Device Management</p>
+          <p className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-red-700 via-sky-700 to-green-700">
+            Device Management
+          </p>
           <div className="flex flex-row justify-center items-center">
             <p
               onClick={() => openAddModal({ id: 1, name: "Item 1" })}
@@ -61,7 +64,6 @@ const DeviceManagement: React.FC = () => {
         </div>
         <div className="h-[3px] w-full mb-4 rounded-md bg-white" />
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-
           {Array.isArray(devices) &&
             devices.map((device) => (
               <DeviceCard
@@ -70,7 +72,7 @@ const DeviceManagement: React.FC = () => {
                 temperature={device.temperature}
                 speed={device.speed}
                 status={device.status}
-                lastUpdated={device.lastUpdated}      
+                lastUpdated={device.updateAt}
               />
             ))}
 

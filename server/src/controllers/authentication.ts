@@ -3,8 +3,6 @@ import sqlite3 from "sqlite3";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { Router, Request, Response } from "express";
-import axios from "axios";
-import { getCookie, setCookie } from "typescript-cookie";
 import Cookies from "js-cookie";
 
 const db = new sqlite3.Database("./database.sqlite");
@@ -26,19 +24,20 @@ export const login = async (req: Request, res: Response) => {
           if (!match) {
             res.status(401).json({ message: "incorrect password" });
             return;
-          }
+          };
           const token = jwt.sign({ username }, "mysecret", {
             expiresIn: "1h",
           });
-
-          res.cookie('authToken', 'someRandomToken', {
-            maxAge: 900000,
-            httpOnly: true,
-           // sameSite: 'None',
-            secure: process.env.NODE_ENV === 'production',
-        });
+          db.all(
+            "INSERT INTO tokens (token) VALUES (?)",
+            [token,],
+            function (err) {
+              if (err) {
+                return res.status(500).json({ error: err.message });
+              }
+            }
+          );
           res.send({ token: token, user: rows[0].userName });
-          // localStorage.setItem('authToken', token);
         }
       }
     );
@@ -64,7 +63,7 @@ export const register = async (req: express.Request, res: express.Response) => {
         console.log("rows", row);
         if (row === undefined || row.length === 0) {
           const hashedPassword = await bcrypt.hash(password, 10);
-          console.log("password", hashedPassword);
+          //console.log("password", hashedPassword);
           db.run(
             "INSERT INTO users (email, userName, password) VALUES (?, ?, ?)",
             [email, username, hashedPassword],
@@ -83,7 +82,7 @@ export const register = async (req: express.Request, res: express.Response) => {
       }
     );
   } catch (error) {
-    console.log(error);
+  //  console.log(error);
     return res.status(400).json({ error: "Error creating user" });
   }
 };
@@ -92,16 +91,18 @@ export const register = async (req: express.Request, res: express.Response) => {
 
 export const list = async (req: express.Request, res: express.Response) => {
   try {
-    const authToken = req.headers["authorization"];
+    //const authToken = req.headers["authorization"];
+    const authToken = Cookies.get("authToken");
+    //console.log(authToken);
     if (!authToken) {
       return res.status(401).json({ message: "Unauthorized" });
     }
-    const token = authToken.split(" ")[1];
-    const decoded = jwt.verify(token, "mysecret");
-    console.log("decoded", decoded);
-    if (!decoded) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
+    // const token = authToken.split(" ")[1];
+    // const decoded = jwt.verify(token, "mysecret");
+    // console.log("decoded", decoded);
+    // if (!decoded) {
+    //   return res.status(401).json({ message: "Unauthorized" });
+    // }
 
     db.all("SELECT * FROM users ", async (err: any, rows: any) => {
       if (err) {
@@ -112,7 +113,51 @@ export const list = async (req: express.Request, res: express.Response) => {
       }
     });
   } catch (error) {
-    console.log(error);
+   // console.log(error);
     return res.status(400).json({ error: "Error list user" });
+  }
+};
+
+// export const getToken = async (req: express.Request, res: express.Response) => {
+//   const { username } = req.body;
+//   console.log("username", req.body);
+//   try {
+//     db.all(
+//       "SELECT * FROM tokens WHERE username = ?",
+//       [req.params.username],
+//       function (err, rows) {
+//         if (err) {
+//           return res.status(500).json({ error: "Error get token" });
+//         }
+//         if (rows) {
+//           console.log;
+//           res.send(rows);
+//           return false;
+//         } else {
+//           console.log("failed");
+//           res.send("failed");
+//           return false;
+//         }
+//       }
+//     );
+//   } catch (error) {
+//     console.log(error);
+//     return res.status(400).json({ error: "Error list token" });
+//   }
+// };
+
+export const deleteToken = async (req: express.Request, res: express.Response) => {
+  try {
+    db.run(
+      "DELETE FROM tokens",
+      function (err) {
+        if (err) {
+          return res.status(500).json({ error: "Error deleting token" });
+        }
+        return res.status(200).json({ message: "Device token successfully" });
+      }
+    );
+  } catch (error) {
+    return res.status(400).json({ error: "Error deleting token" });
   }
 };

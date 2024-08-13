@@ -22,6 +22,7 @@ const AddModal: React.FC<AddModalProps> = ({ isOpen, onClose }) => {
     }
     dispatch(addDevice({ name, status, temperature, speed }));
     onClose();
+    setName("");
     setTimeout(() => {
       dispatch(getDevices());
     }, 100);

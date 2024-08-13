@@ -5,7 +5,7 @@ import { FaUser, FaLock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
-import { changeState, registerUser } from "../store/slices/authSlice";
+import { registerUser } from "../store/slices/authSlice";
 import { RootState, useAppDispatch } from "../store/store";
 import { useSelector } from "react-redux";
 
@@ -17,7 +17,7 @@ interface IFormInput {
 export default function Register() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const {status} = useSelector((state: RootState) => state.auth)
+  const { statusRegister } = useSelector((state: RootState) => state.auth);
   const registerSchema = Yup.object().shape({
     username: Yup.string().required("Username is required"),
     password: Yup.string()
@@ -45,15 +45,14 @@ export default function Register() {
   };
 
   useEffect(() => {
-    if (status === "success") {
-      dispatch(changeState())
-      navigate("/")
+    if (statusRegister === "success") {
+      navigate("/");
     }
-  }, [status]);
+  }, [statusRegister]);
 
   return (
     <div className="w-full h-screen flex items-center justify-center tracking-wider  bg-gradient-to-t from-gray-700 to-gray-300">
-      <div className="w-11/12  sm:w-5/12 md:w-3/12 text-sm glass">
+      <div className="glass shadow-2xl sm:w-1/2 md:w-1/2 lg:w-1/3 xl:w-1/4">
         <div className="w-full text-center my-3">
           <h2 className="text-2xl text-black font-medium">Register</h2>
         </div>
@@ -66,11 +65,13 @@ export default function Register() {
               placeholder="Enter Your Name"
             />
             <div className="w-2/12  flex items-center justify-center">
-              <FaUser className="text-xl"/>
+              <FaUser className="text-xl" />
             </div>
           </div>
-          {errors.username && <p className="text-red-500 mx-5">{errors.username.message}</p>}
-      
+          {errors.username && (
+            <p className="text-red-500 mx-5">{errors.username.message}</p>
+          )}
+
           <div className="flex border-b-black border-b-2 mx-5 mt-5 py-1">
             <input
               type="text"
@@ -79,11 +80,13 @@ export default function Register() {
               placeholder="Your Email Address"
             />
             <div className="w-2/12  flex items-center justify-center">
-              <MdEmail className="text-xl"/>
+              <MdEmail className="text-xl" />
             </div>
           </div>
-          {errors.email && <p className="text-red-500 mx-5">{errors.email.message}</p>}
-   
+          {errors.email && (
+            <p className="text-red-500 mx-5">{errors.email.message}</p>
+          )}
+
           <div className="flex border-b-black border-b-2 mx-5 mt-5 py-1">
             <input
               type="password"
@@ -92,30 +95,35 @@ export default function Register() {
               placeholder="Create a Strong Password"
             />
             <div className="w-2/12  flex items-center justify-center">
-              <FaLock className="text-xl"/>
+              <FaLock className="text-xl" />
             </div>
           </div>
-          {errors.password && <p className="text-red-500 mx-5">{errors.password.message}</p>}
-          
-          <div className="mx-5 my-7 py-2">
-            <button className="bg-black w-full h-[35px] text-white">Register</button>
+          {errors.password && (
+            <p className="text-red-500 mx-5">{errors.password.message}</p>
+          )}
 
-            {status === "failed" && (
+          <div className="mx-5 my-7 py-2">
+            <button className="bg-black w-full h-[35px] text-white">
+              Register
+            </button>
+
+            {statusRegister === "failed" && (
               <p className="flex items-center justify-center rounded-md bg-red-700  font-medium text-white p-2 mt-2">
                 something went wrong
               </p>
             )}
 
-             {status === "loading" && (
+            {statusRegister === "loading" && (
               <p className="flex items-center justify-center rounded-md bg-green-700  font-medium text-white p-2 mt-2">
                 Loading...
               </p>
-            )} 
-
+            )}
           </div>
-        
+
           <div className="mx-5 my-5 py-2 flex items-center justify-center cursor-pointer">
-            <p className="text-sm" onClick={() => navigate("/")}>Already have an account? / Login</p>
+            <p className="text-sm" onClick={() => navigate("/")}>
+              Already have an account? / Login
+            </p>
           </div>
         </form>
       </div>
