@@ -8,6 +8,7 @@ import AddModal from "../components/AddModal";
 import { useNavigate } from "react-router-dom";
 import { getDevices } from "../store/slices/devieSlice";
 import { logout, removeToken } from "../store/slices/authSlice";
+import Tooltip from "../components/Tooltip";
 
 interface Device {
   id: number;
@@ -56,10 +57,12 @@ const DeviceManagement: React.FC = () => {
             >
               Add Device
             </p>
+            <Tooltip content="Logout" className="w-[80px] top-30">
             <IoLogOut
               className="text-3xl font-bold cursor-pointer text-red-700"
               onClick={logOut}
             />
+            </Tooltip>
           </div>
         </div>
         <div className="h-[3px] w-full mb-4 rounded-md bg-white" />

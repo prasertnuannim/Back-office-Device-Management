@@ -1,5 +1,5 @@
 import { NextFunction } from "connect";
-import { Request, RequestHandler, Response } from "express";
+import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import sqlite3 from "sqlite3";
 
@@ -24,7 +24,7 @@ export const authenticateToken = async (
   try {
     db.get("SELECT token FROM tokens", (err, row: TokenRow) => {
       if (err) {
-  //      console.error("Error retrieving token from database:", err);
+        //      console.error("Error retrieving token from database:", err);
         return res.status(500).json({ message: "Error retrieving token" });
       }
 
@@ -35,19 +35,19 @@ export const authenticateToken = async (
 
         jwt.verify(token, "mysecret", (err, decoded) => {
           if (err) {
-          //.error("Token verification failed:", err);
+            //.error("Token verification failed:", err);
             return res
               .status(403)
               .json({ message: "Invalid or expired token" });
           }
           req.user = decoded;
-       //   console.log(req.user)
+          //   console.log(req.user)
           next();
         });
       }
     });
   } catch (err) {
-//    console.error("Unexpected error:", err);
+    //    console.error("Unexpected error:", err);
     res.status(500).json({ message: "Unexpected error" });
   }
 };

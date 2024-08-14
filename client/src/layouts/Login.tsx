@@ -7,7 +7,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { RootState, useAppDispatch } from "../store/store";
 import { useSelector } from "react-redux";
 import { loginUser } from "../store/slices/authSlice";
-import Cookies from "js-cookie";
 
 interface IFormInput {
   username: string;

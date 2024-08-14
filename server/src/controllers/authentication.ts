@@ -2,8 +2,7 @@ import express from "express";
 import sqlite3 from "sqlite3";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { Router, Request, Response } from "express";
-import Cookies from "js-cookie";
+import { Request, Response } from "express";
 
 const db = new sqlite3.Database("./database.sqlite");
 export const login = async (req: Request, res: Response) => {
@@ -49,8 +48,6 @@ export const login = async (req: Request, res: Response) => {
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 export const register = async (req: express.Request, res: express.Response) => {
-  console.log(req.body);
-
   try {
     const { email, password, username } = req.body;
     db.all(
@@ -60,7 +57,7 @@ export const register = async (req: express.Request, res: express.Response) => {
         if (err) {
           return res.status(500).json({ error: "Database error" });
         }
-        console.log("rows", row);
+        //console.log("rows", row);
         if (row === undefined || row.length === 0) {
           const hashedPassword = await bcrypt.hash(password, 10);
           //console.log("password", hashedPassword);
@@ -89,62 +86,6 @@ export const register = async (req: express.Request, res: express.Response) => {
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-export const list = async (req: express.Request, res: express.Response) => {
-  try {
-    //const authToken = req.headers["authorization"];
-    const authToken = Cookies.get("authToken");
-    //console.log(authToken);
-    if (!authToken) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-    // const token = authToken.split(" ")[1];
-    // const decoded = jwt.verify(token, "mysecret");
-    // console.log("decoded", decoded);
-    // if (!decoded) {
-    //   return res.status(401).json({ message: "Unauthorized" });
-    // }
-
-    db.all("SELECT * FROM users ", async (err: any, rows: any) => {
-      if (err) {
-        res.status(500).json({ error: err.message });
-        return false;
-      } else {
-        res.status(200).json(rows);
-      }
-    });
-  } catch (error) {
-   // console.log(error);
-    return res.status(400).json({ error: "Error list user" });
-  }
-};
-
-// export const getToken = async (req: express.Request, res: express.Response) => {
-//   const { username } = req.body;
-//   console.log("username", req.body);
-//   try {
-//     db.all(
-//       "SELECT * FROM tokens WHERE username = ?",
-//       [req.params.username],
-//       function (err, rows) {
-//         if (err) {
-//           return res.status(500).json({ error: "Error get token" });
-//         }
-//         if (rows) {
-//           console.log;
-//           res.send(rows);
-//           return false;
-//         } else {
-//           console.log("failed");
-//           res.send("failed");
-//           return false;
-//         }
-//       }
-//     );
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(400).json({ error: "Error list token" });
-//   }
-// };
 
 export const deleteToken = async (req: express.Request, res: express.Response) => {
   try {

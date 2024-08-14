@@ -3,8 +3,6 @@ import { useDispatch } from "react-redux";
 import authReducer from "./slices/authSlice";
 import deviceReducer from "./slices/devieSlice";
 
-//const user = { userReducer };
-
 export const store = configureStore({
   reducer: {
     auth: authReducer,

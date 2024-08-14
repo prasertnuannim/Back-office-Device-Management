@@ -73,7 +73,6 @@ export const update = async (req: express.Request, res: express.Response) => {
     return res.status(400).json({ error: "Error updating device" });
   }
 };
-
 export const remove = async (req: express.Request, res: express.Response) => {
   try {
     db.run(

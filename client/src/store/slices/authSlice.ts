@@ -1,7 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import httpClient from "../../utils/httpClient";
-import Cookies from "js-cookie";
 
 interface UserState {
   accessToken: string;
@@ -24,7 +23,6 @@ const initialState: UserState = {
   error: null,
   count: 0,
 };
-
 
 interface LoginAction {
   username: string;

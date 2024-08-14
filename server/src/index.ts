@@ -2,18 +2,11 @@ import express from "express";
 import http from "http";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
-import comptrssion from "compression";
 import cors from "cors";
 import router from "./router";
 
 const app = express();
-app.use(
-  cors({
-    credentials: true,
-  })
-);
-
-//app.use(comptrssion());
+app.use(cors());
 app.use(cookieParser());
 app.use(bodyParser.json());
 

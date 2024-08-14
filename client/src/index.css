@@ -2,13 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* .bg {
-    background: url('./images//bg.jpg');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-} */
-
 .glass{
     /* From https://css.glass */
 background: rgba(255, 255, 255, 0.17);
